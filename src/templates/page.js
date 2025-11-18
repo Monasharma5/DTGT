@@ -8,10 +8,7 @@ import Seo from "../components/seo"
 const PageTemplate = ({ data: { page } }) => {
   return (
     <Layout>
-      <Seo
-        title={page.title}
-        description={page?.seo?.metaDesc || ""}
-      />
+      <Seo title={page.title} />
 
       <article
         className="wp-page"
@@ -36,10 +33,6 @@ export const pageQuery = graphql`
       title
       content
       uri
-      seo {
-        metaDesc
-        title
-      }
     }
   }
 `
