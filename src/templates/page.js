@@ -1,38 +1,24 @@
 import React from "react"
 import { graphql } from "gatsby"
-import parse from "html-react-parser"
-
 import Layout from "../components/layout"
-import Seo from "../components/seo"
 
-const PageTemplate = ({ data: { page } }) => {
+const PageTemplate = ({ data }) => {
+  const page = data.wpPage
   return (
     <Layout>
-      <Seo title={page.title} />
-
-      <article
-        className="wp-page"
-        itemScope
-        itemType="http://schema.org/WebPage"
-        style={{ maxWidth: "1200px", margin: "0 auto" }}
-      >
-        <h1>{parse(page.title)}</h1>
-
-        <section>{parse(page.content)}</section>
-      </article>
+      <h1>{page.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: page.content }} />
     </Layout>
   )
 }
 
-export default PageTemplate
-
-export const pageQuery = graphql`
-  query PageById($id: String!) {
-    page: wpPage(id: { eq: $id }) {
-      id
+export const query = graphql`
+  query ($id: String!) {
+    wpPage(id: { eq: $id }) {
       title
       content
-      uri
     }
   }
 `
+
+export default PageTemplate
