@@ -164,3 +164,46 @@ async function getPosts({ graphql, reporter }) {
 
   return graphqlResult.data.allWpPost.edges
 }
+
+
+/* ------------------------------
+   GET WORDPRESS PAGES
+--------------------------------*/
+async function getPages({ graphql, reporter }) {
+  const result = await graphql(`
+    query WpPages {
+      allWpPage {
+        nodes {
+          id
+          uri
+        }
+      }
+    }
+  `)
+
+  if (result.errors) {
+    reporter.panicOnBuild(
+      `Error loading pages`,
+      result.errors
+    )
+  }
+
+  return result.data.allWpPage.nodes
+}
+
+/* ------------------------------
+   CREATE WORDPRESS PAGES
+--------------------------------*/
+async function createIndividualWpPages({ pages, gatsbyUtilities }) {
+  return Promise.all(
+    pages.map(page =>
+      gatsbyUtilities.actions.createPage({
+        path: page.uri,
+        component: path.resolve(`./src/templates/page.js`),
+        context: {
+          id: page.id,
+        },
+      })
+    )
+  )
+}
